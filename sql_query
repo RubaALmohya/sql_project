@@ -41,7 +41,7 @@ GO
 ALTER TABLE [dbo].[users] CHECK CONSTRAINT [FK_users_countries]
 GO
 
-ALTER TABLE [dbo].[users]  WITH CHECK ADD CHECK  (([gender]='Female' OR [gender]='Male'))
+ALTER TABLE [dbo].[users]  WITH CHECK ADD CHECK  (([gender]='m' OR [gender]='m'))
 GO
 
 
@@ -136,3 +136,12 @@ GO
 
 
 
+
+insert into countries values(1,'Saudia Arabia','Asia');
+
+insert into users values(1,'Ruba','ruba@gmail.com','f','1998-10-26',CURRENT_TIMESTAMP,1);
+insert into products values(1,'iphone 13',3500,'valid',CURRENT_TIMESTAMP);
+insert into orders values(1,1,'finish',CURRENT_TIMESTAMP);
+insert into order_products values(1,1,2);
+update countries set name='KSA' where code=1;
+delete from products where id=1;
