@@ -1,0 +1,138 @@
+CREATE TABLE [dbo].[countries](
+	[code] [int] NOT NULL,
+	[name] [varchar](20) NOT NULL,
+	[countinent_name] [varchar](20) NOT NULL,
+ CONSTRAINT [PK_countries] PRIMARY KEY CLUSTERED 
+(
+	[code] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+
+
+CREATE TABLE [dbo].[users](
+	[id] [int] NOT NULL,
+	[full_name] [varchar](20) NOT NULL,
+	[email] [varchar](20) NOT NULL,
+	[gender] [char](1) NOT NULL,
+	[date_of_birth] [varchar](15) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[country_code] [int] NOT NULL,
+ CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[users]  WITH CHECK ADD  CONSTRAINT [FK_users_countries] FOREIGN KEY([country_code])
+REFERENCES [dbo].[countries] ([code])
+GO
+
+ALTER TABLE [dbo].[users] CHECK CONSTRAINT [FK_users_countries]
+GO
+
+ALTER TABLE [dbo].[users]  WITH CHECK ADD CHECK  (([gender]='Female' OR [gender]='Male'))
+GO
+
+
+
+
+
+CREATE TABLE [dbo].[products](
+	[id] [int] NOT NULL,
+	[name] [varchar](10) NOT NULL,
+	[price] [int] NOT NULL,
+	[status] [varchar](10) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+ CONSTRAINT [PK_products] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[products] ADD  CONSTRAINT [DF_price]  DEFAULT ((0)) FOR [price]
+GO
+
+ALTER TABLE [dbo].[products]  WITH CHECK ADD CHECK  (([status]='expired' OR [status]='valid'))
+GO
+
+
+
+
+
+CREATE TABLE [dbo].[orders](
+	[id] [int] NOT NULL,
+	[user_ID] [int] NOT NULL,
+	[status] [varchar](6) NOT NULL,
+	[created_at] [datetime] NOT NULL,
+ CONSTRAINT [PK_orders] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
+
+ALTER TABLE [dbo].[orders]  WITH CHECK ADD  CONSTRAINT [FK_orders_users] FOREIGN KEY([user_ID])
+REFERENCES [dbo].[users] ([id])
+GO
+
+ALTER TABLE [dbo].[orders] CHECK CONSTRAINT [FK_orders_users]
+GO
+
+ALTER TABLE [dbo].[orders]  WITH CHECK ADD CHECK  (([status]='finish' OR [status]='start'))
+GO
+
+
+
+
+CREATE TABLE [dbo].[order_products](
+	[order_id] [int] NOT NULL,
+	[product_id] [int] NOT NULL,
+	[quantity] [int] NOT NULL,
+ CONSTRAINT [PK_order_products] PRIMARY KEY CLUSTERED 
+(
+	[order_id] ASC,
+	[product_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[order_products] ADD  CONSTRAINT [DF_quantity]  DEFAULT ((0)) FOR [quantity]
+GO
+
+ALTER TABLE [dbo].[order_products]  WITH CHECK ADD  CONSTRAINT [FK_order_products_orders] FOREIGN KEY([order_id])
+REFERENCES [dbo].[orders] ([id])
+GO
+
+ALTER TABLE [dbo].[order_products] CHECK CONSTRAINT [FK_order_products_orders]
+GO
+
+ALTER TABLE [dbo].[order_products]  WITH CHECK ADD  CONSTRAINT [FK_order_products_products] FOREIGN KEY([product_id])
+REFERENCES [dbo].[products] ([id])
+GO
+
+ALTER TABLE [dbo].[order_products] CHECK CONSTRAINT [FK_order_products_products]
+GO
+
+
+
